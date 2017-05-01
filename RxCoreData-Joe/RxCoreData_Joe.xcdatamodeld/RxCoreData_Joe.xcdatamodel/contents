@@ -1,4 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16D32" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ChildA" representedClassName="" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MainEntity" inverseName="childsa" inverseEntity="MainEntity" syncable="YES"/>
+    </entity>
+    <entity name="ChildB" representedClassName="" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MainEntity" inverseName="childsb" inverseEntity="MainEntity" syncable="YES"/>
+    </entity>
+    <entity name="ChildC" representedClassName="" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MainEntity" inverseName="childsc" inverseEntity="MainEntity" syncable="YES"/>
+    </entity>
+    <entity name="ChildD" representedClassName="" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MainEntity" inverseName="childsd" inverseEntity="MainEntity" syncable="YES"/>
+    </entity>
+    <entity name="ChildE" representedClassName="" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MainEntity" inverseName="childse" inverseEntity="MainEntity" syncable="YES"/>
+    </entity>
+    <entity name="MainEntity" representedClassName="" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="childsa" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChildA" inverseName="parent" inverseEntity="ChildA" syncable="YES"/>
+        <relationship name="childsb" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChildB" inverseName="parent" inverseEntity="ChildB" syncable="YES"/>
+        <relationship name="childsc" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChildC" inverseName="parent" inverseEntity="ChildC" syncable="YES"/>
+        <relationship name="childsd" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChildD" inverseName="parent" inverseEntity="ChildD" syncable="YES"/>
+        <relationship name="childse" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChildE" inverseName="parent" inverseEntity="ChildE" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ChildA" positionX="18" positionY="63" width="128" height="90"/>
+        <element name="ChildB" positionX="-54" positionY="-9" width="128" height="90"/>
+        <element name="ChildC" positionX="-36" positionY="9" width="128" height="90"/>
+        <element name="ChildD" positionX="-18" positionY="27" width="128" height="90"/>
+        <element name="ChildE" positionX="0" positionY="45" width="128" height="90"/>
+        <element name="MainEntity" positionX="-63" positionY="-18" width="128" height="150"/>
+    </elements>
 </model>

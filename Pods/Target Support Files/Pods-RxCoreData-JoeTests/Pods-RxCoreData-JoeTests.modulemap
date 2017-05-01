@@ -1,0 +1,6 @@
+framework module Pods_RxCoreData_JoeTests {
+  umbrella header "Pods-RxCoreData-JoeTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
