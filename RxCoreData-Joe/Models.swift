@@ -40,13 +40,13 @@ struct MainEntity: Persistable {
         self.value = entity.value(forKey: "value") as! String
         //relationships
         if let childsaEntities = entity.value(forKey: "childsa") as? Set<ChildA.T>, childsaEntities.count > 0 {
+//            let bulshit = childsaEntities.map(ChildA.init)
             self.childsa.setValue(childsaEntities)
         }
     }
-    
+        
     func update(_ entity: NSManagedObject) {
-        entity.setValue(self.identity, forKey: "id")
-        entity.setValue(self.value, forKey: "value")
+        self.updateWithouRelationships(entity)
         self.childsa.save(ToEntity: entity)
         self.childsb.save(ToEntity: entity)
         self.childsc.save(ToEntity: entity)
@@ -55,9 +55,12 @@ struct MainEntity: Persistable {
 
     }
     
-    func softUpdate(_ entity: NSManagedObject) {
-        
+    
+    func updateWithouRelationships(_ entity: NSManagedObject) {
+        entity.setValue(self.identity, forKey: "id")
+        entity.setValue(self.value, forKey: "value")
     }
+    
     
 }
 
@@ -81,12 +84,20 @@ struct ChildA: Persistable {
     init(entity: T) {
         self.identity = entity.value(forKey: "id") as! String
         self.value = entity.value(forKey: "value") as! String
+        //relationships
+        if let parentEntities = entity.value(forKey: "parent") as? MainEntity.T {
+            self.parent.setValue(parentEntities)
+        }
     }
     
     func update(_ entity: NSManagedObject) {
+        self.updateWithouRelationships(entity)
+        self.parent.save(ToEntity: entity)
+    }
+    
+    func updateWithouRelationships(_ entity: NSManagedObject) {
         entity.setValue(self.identity, forKey: "id")
         entity.setValue(self.value, forKey: "value")
-        self.parent.save(ToEntity: entity)
     }
     
     func softUpdate(_ entity: NSManagedObject) {
@@ -116,13 +127,13 @@ struct ChildB: Persistable {
     }
     
     func update(_ entity: NSManagedObject) {
-        entity.setValue(self.identity, forKey: "id")
-        entity.setValue(self.value, forKey: "value")
+        self.updateWithouRelationships(entity)
         self.parent.save(ToEntity: entity)
     }
     
-    func softUpdate(_ entity: NSManagedObject) {
-        
+    func updateWithouRelationships(_ entity: NSManagedObject) {
+        entity.setValue(self.identity, forKey: "id")
+        entity.setValue(self.value, forKey: "value")
     }
 }
 
@@ -147,13 +158,13 @@ struct ChildC: Persistable {
     }
     
     func update(_ entity: NSManagedObject) {
-        entity.setValue(self.identity, forKey: "id")
-        entity.setValue(self.value, forKey: "value")
+        self.updateWithouRelationships(entity)
         self.parent.save(ToEntity: entity)
     }
     
-    func softUpdate(_ entity: NSManagedObject) {
-        
+    func updateWithouRelationships(_ entity: NSManagedObject) {
+        entity.setValue(self.identity, forKey: "id")
+        entity.setValue(self.value, forKey: "value")
     }
 }
 
@@ -178,13 +189,13 @@ struct ChildD: Persistable {
     }
     
     func update(_ entity: NSManagedObject) {
-        entity.setValue(self.identity, forKey: "id")
-        entity.setValue(self.value, forKey: "value")
+        self.updateWithouRelationships(entity)
         self.parent.save(ToEntity: entity)
     }
     
-    func softUpdate(_ entity: NSManagedObject) {
-        
+    func updateWithouRelationships(_ entity: NSManagedObject) {
+        entity.setValue(self.identity, forKey: "id")
+        entity.setValue(self.value, forKey: "value")
     }
 }
 
@@ -209,169 +220,16 @@ struct ChildE: Persistable {
     }
     
     func update(_ entity: NSManagedObject) {
-        entity.setValue(self.identity, forKey: "id")
-        entity.setValue(self.value, forKey: "value")
+        self.updateWithouRelationships(entity)
         self.parent.save(ToEntity: entity)
     }
     
-    func softUpdate(_ entity: NSManagedObject) {
-        
-    }
-}
-
-struct Parent: Persistable {
-    public typealias T = NSManagedObject
-    
-    var identity: String
-    var value: String
-    var parent: ToOneRelationship<MainEntity> = ToOneRelationship(key: "parent")
-
-    public static var primaryAttributeName: String {
-        return "id"
-    }
-    init(id: String, value: String) {
-        self.identity = id
-        self.value = value
-    }
-    
-    init(entity: T) {
-        self.identity = entity.value(forKey: "id") as! String
-        self.value = entity.value(forKey: "value") as! String
-    }
-    
-    func update(_ entity: NSManagedObject) {
-        
-    }
-    
-    func softUpdate(_ entity: NSManagedObject) {
-        
-    }
-}
-
-
-
-struct Mamrd {
-    var id: String
-    var value: String
-    var zmrdi: ToManyRelationship<Zmrd> = ToManyRelationship<Zmrd>(key: "zmrdi")
-    
-    init(id: String, value: String) {
-        self.id = id
-        self.value = value
-    }
-}
-
-extension Mamrd: Persistable {
-    public typealias T = NSManagedObject
-    
-    public static var entityName: String {
-        return "Mamrd"
-    }
-    
-    public static var primaryAttributeName: String {
-        return "id"
-    }
-    
-    var identity: String {
-        return id
-    }
-    
-    init(entity: T) {
-        self.id = entity.value(forKey: "id") as! String
-        self.value = entity.value(forKey: "value") as! String
-        if let zmrdiEntities = entity.value(forKey: "zmrdi") as? Set<Zmrd.T>, zmrdiEntities.count > 0 {
-            self.zmrdi.setValue(zmrdiEntities)
-        }
-    }
-    
-    func update(_ entity: NSManagedObject) {
-        entity.setValue(self.id, forKey: "id")
+    func updateWithouRelationships(_ entity: NSManagedObject) {
+        entity.setValue(self.identity, forKey: "id")
         entity.setValue(self.value, forKey: "value")
-        self.zmrdi.save(ToEntity: entity)
-    }
-    
-}
-
-extension Mamrd: Equatable {}
-
-func ==(lhs: Mamrd, rhs: Mamrd) -> Bool {
-    return lhs.id == rhs.id
-}
-
-extension Mamrd: Hashable {
-    
-    var hashValue: Int { return self.identity.hashValue }
-}
-
-struct Zmrd {
-    var id: String
-    var value: String
-    var mamrd: ToOneRelationship<Mamrd> = ToOneRelationship<Mamrd>(key:"mamrd")
-    
-    init(id: String, value: String) {
-        self.id = id
-        self.value = value
-    }
-    
-}
-
-extension Zmrd: Persistable {
-    public typealias T = NSManagedObject
-    
-    public static var entityName: String {
-        return "Zmrd"
-    }
-    
-    public static var primaryAttributeName: String {
-        return "id"
-    }
-    
-    var identity: String {
-        return id
-    }
-    
-    init(entity: T) {
-        self.id = entity.value(forKey: "id") as! String
-        self.value = entity.value(forKey: "value") as! String
-        print(entity)
-        if let mamrdEntity = entity.value(forKey: "mamrd") as? Mamrd.T {
-            self.mamrd.setValue(mamrdEntity)
-        }
-    }
-    
-    func update(_ entity: NSManagedObject) {
-        entity.setValue(self.id, forKey: "id")
-        entity.setValue(self.value, forKey: "value")
-        self.mamrd.save(ToEntity: entity)
     }
 }
 
-extension Zmrd: Equatable {}
-
-func ==(lhs: Zmrd, rhs: Zmrd) -> Bool {
-    return lhs.identity == rhs.identity
-}
-
-extension Zmrd: Hashable {
-    public var hashValue: Int { return self.id.hashValue }
-}
 
 
-//extension Persistable where Self: IdentifiableType {
-//    public typealias T = NSManagedObject
-//    
-//    public static var entityName: String {
-//        return Self
-//    }
-//    
-//    public static var primaryAttributeName: String {
-//        return "id"
-//    }
-//}
-//
-//
-//extension Mamrd: IdentifiableType {
-//    
-//    public typealias Identity = String
-//    public var identity: Identity { return id }
-//}
+

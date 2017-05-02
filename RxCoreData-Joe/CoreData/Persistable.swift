@@ -27,7 +27,7 @@ public protocol Persistable: Equatable, Hashable {
 
     func update(_ entity: T)
     
-    func softUpdate(_ entity: T)
+    func updateWithouRelationships(_ entity: T)
     
     //hashable
 }
