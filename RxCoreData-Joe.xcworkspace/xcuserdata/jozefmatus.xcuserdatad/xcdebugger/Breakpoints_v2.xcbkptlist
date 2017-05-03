@@ -19,13 +19,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RxCoreData-Joe/Models.swift"
-            timestampString = "515339226.09112"
+            filePath = "RxCoreData-Joe/ViewController.swift"
+            timestampString = "515419472.283591"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "update(_:)"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "gimmeRandomArrayOfChildsA()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -35,13 +35,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RxCoreData-Joe/CoreData/CoreDataRelationships.swift"
-            timestampString = "515339240.157665"
+            filePath = "RxCoreData-Joe/ViewController.swift"
+            timestampString = "515419595.834611"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "save(ToEntity:)"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "setupRx()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

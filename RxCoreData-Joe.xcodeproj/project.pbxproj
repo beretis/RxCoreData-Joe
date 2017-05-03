@@ -291,6 +291,7 @@
 				TargetAttributes = {
 					28E6E3241EB0DD8900624FFE = {
 						CreatedOnToolsVersion = 8.3.1;
+						DevelopmentTeam = B62A4LG5GA;
 						ProvisioningStyle = Automatic;
 					};
 					28E6E33B1EB0DD8900624FFE = {
@@ -664,7 +665,9 @@
 			baseConfigurationReference = B616D422242945514244B2DB /* Pods-RxCoreData-Joe.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = B62A4LG5GA;
 				INFOPLIST_FILE = "RxCoreData-Joe/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beretis.RxCoreData-Joe";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -677,7 +680,9 @@
 			baseConfigurationReference = 44565F2D8C575C9E045A3F8B /* Pods-RxCoreData-Joe.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = B62A4LG5GA;
 				INFOPLIST_FILE = "RxCoreData-Joe/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beretis.RxCoreData-Joe";
 				PRODUCT_NAME = "$(TARGET_NAME)";

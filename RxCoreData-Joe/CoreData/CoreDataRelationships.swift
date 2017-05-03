@@ -15,13 +15,19 @@ import RxDataSources
 import RxSwift
 import RxCocoa
 
+public struct RelationshipFault {
+    var faultId: String
+    var context: NSManagedObjectContext
+    
+}
 
 public struct ToOneRelationship<P> where P:Persistable, P: Hashable {
     let key: String
     private var value: P?
-    private var fault: String?
+    private var fault: RelationshipFault?
     
     mutating func setValue(_ newValue: P) {
+        self.fault = nil
         self.value = newValue
     }
 
@@ -29,15 +35,29 @@ public struct ToOneRelationship<P> where P:Persistable, P: Hashable {
         guard let faultId = newValue.value(forKey: P.primaryAttributeName) as? String else {
             return
         }
+        guard let context = newValue.managedObjectContext else {
+            return
+        }
         self.value = nil
-        self.fault = faultId
+        self.fault = RelationshipFault(faultId: faultId, context: context)
     }
     
     mutating func getValue() -> P? {
-        guard self.fault == nil else {
-            self.value = 
+        if self.fault != nil {
+            self.value = P.fetch(WithId: self.fault!.faultId, context: self.fault!.context)
+            self.fault = nil
         }
         return self.value
+    }
+    
+    func getFaultId() -> String? {
+        guard fault != nil || value != nil else {
+            return nil
+        }
+        guard fault != nil else {
+            return self.value!.identity
+        }
+        return fault!.faultId
     }
     
     func update(ToEntity entity: P.T) {
@@ -49,13 +69,7 @@ public struct ToOneRelationship<P> where P:Persistable, P: Hashable {
         guard let context = entity.managedObjectContext else {
             return
         }
-        entity.setValue(self.getEntityWithoutRelationships(forPersistable: self.value!, inContext: context), forKey: key)
-    }
-    
-    func getEntityWithoutRelationships(forPersistable persistable: P, inContext context: NSManagedObjectContext) -> P.T {
-        var entity = context.getOrCreateEntity(for: persistable)
-        persistable.updateWithouRelationships(entity)
-        return entity
+        entity.setValue(self.value!.toEntity(context: context), forKey: key)
     }
     
     init(key: String) {
@@ -69,8 +83,23 @@ public struct ToOneRelationship<P> where P:Persistable, P: Hashable {
 /// To many relationship class , it guarantees unique items in items (based on Identity of persistable). Main problem was relationship creating infinite loop of dependencies, it was resolved by using PersistableOrEntity instead of Persistable so the Persistable's function toEntity isn't called every time.
 public struct ToManyRelationship<P> where P:Persistable, P:Hashable {
     public var key: String
-    private var items: Array<P>?
-    
+    private var items: Array<P>? {
+        didSet {
+            guard self.items != nil else {
+                return
+            }
+            self.fault = nil
+        }
+    }
+    private var fault: Array<RelationshipFault>? {
+        didSet {
+            guard self.fault != nil else {
+                return
+            }
+            self.items = nil
+        }
+    }
+
     init(key: String) {
         self.key = key
     }
@@ -79,7 +108,31 @@ public struct ToManyRelationship<P> where P:Persistable, P:Hashable {
         self.items = value
     }
     
+    mutating func setValue(_ value: Set<P.T>) {
+        var faults: [RelationshipFault] = []
+        for entity in value {
+            guard let faultId = entity.value(forKey: P.primaryAttributeName) as? String else {
+                continue
+            }
+            guard let context = entity.managedObjectContext else {
+                continue
+            }
+            faults.append(RelationshipFault(faultId: faultId, context: context))
+        }
+        self.fault = faults
+    }
+    
+    mutating func applyFaultIfNeeded() {
+        if self.fault != nil {
+            let faultItems = self.fault!.map { singleFault in
+                P.fetch(WithId: singleFault.faultId, context: singleFault.context)
+                }.flatMap{$0}
+            self.items = faultItems
+        }
+    }
+    
     mutating func addItems(_ items: [P]) {
+        self.applyFaultIfNeeded()
         if self.items == nil {
             self.items = []
         }
@@ -89,6 +142,7 @@ public struct ToManyRelationship<P> where P:Persistable, P:Hashable {
     }
     
     mutating func addItem(_ item: P) {
+        self.applyFaultIfNeeded()
         guard self.items != nil else {
             return self.items = [item]
         }
@@ -98,13 +152,11 @@ public struct ToManyRelationship<P> where P:Persistable, P:Hashable {
         self.items!.append(item)
     }
     
-    func value() -> [P] {
+    
+    mutating func value() -> [P] {
+        self.applyFaultIfNeeded()
         guard let value = self.items else { return [] }
         return value
-    }
-    //TODO
-    func interleave(ToEntity entity: NSManagedObject) {
-        
     }
     
     /// This funcion will save items array to entity no metter what...so if you empty array of items it weill delete your current data
@@ -119,20 +171,15 @@ public struct ToManyRelationship<P> where P:Persistable, P:Hashable {
         }
         
         let entitySet = Set<P.T>(self.items!.map { item in
-            return self.getEntityWithoutRelationships(forPersistable: item, inContext: context)
+            return item.toEntity(context: context)
         })
         entity.setValue(entitySet, forKey: self.key)
-        
-    }
-    
-    func getEntityWithoutRelationships(forPersistable persistable: P, inContext context: NSManagedObjectContext) -> P.T {
-        var entity = context.getOrCreateEntity(for: persistable)
-        persistable.updateWithouRelationships(entity)
-        return entity
     }
     
     var isEmpty: Bool {
-        guard self.items != nil else { return true }
+        guard self.items != nil || self.fault != nil else {
+            return true
+        }
         return items!.count < 1
     }
     
